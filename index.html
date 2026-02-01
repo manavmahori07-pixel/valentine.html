@@ -11,15 +11,13 @@
       background: linear-gradient(135deg, #ff9a9e, #fad0c4);
       font-family: Arial, sans-serif;
       overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     /* QUESTION SCREEN */
     .question {
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
       text-align: center;
     }
 
@@ -48,29 +46,36 @@
       position: absolute;
     }
 
-    /* FINAL SCREEN */
+    /* FINAL CARD */
     .final {
       display: none;
-      position: fixed;
-      inset: 0;
-      background: black;
+      background: white;
+      padding: 30px;
+      border-radius: 25px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+      text-align: center;
+      max-width: 340px;
+      position: relative;
+      z-index: 2;
     }
 
     .final img {
       width: 100%;
-      height: 100%;
-      object-fit: cover;
+      border-radius: 20px;
+      margin-top: 20px;
     }
 
-    .overlay-text {
-      position: absolute;
-      bottom: 8%;
-      width: 100%;
-      text-align: center;
-      color: white;
+    .main-text {
       font-size: 34px;
-      font-weight: bold;
-      text-shadow: 0 4px 20px rgba(0,0,0,0.6);
+      font-weight: 900;
+      color: #ff4d6d;
+      margin-bottom: 10px;
+    }
+
+    .love-text {
+      font-size: 24px;
+      font-weight: 800;
+      color: #ff1f4b;
     }
 
     /* CONFETTI */
@@ -79,7 +84,7 @@
       width: 10px;
       height: 10px;
       animation: fall linear infinite;
-      z-index: 10;
+      z-index: 1;
     }
 
     @keyframes fall {
@@ -102,8 +107,9 @@
 
 <!-- FINAL -->
 <div class="final" id="final">
+  <div class="main-text">In this world, IT’S JUST US</div>
+  <div class="love-text">I LOVE YOU BABY ❤️</div>
   <img src="ujika.jpg" alt="Us">
-  <div class="overlay-text">In this world, IT’S JUST US ❤️</div>
 </div>
 
 <script>
@@ -126,7 +132,6 @@
     question.style.display = "none";
     finalScreen.style.display = "block";
 
-    // Play music from beginning
     music.play();
 
     // Confetti
@@ -143,3 +148,4 @@
 
 </body>
 </html>
+
