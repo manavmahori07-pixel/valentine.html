@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Will You Be My Valentine? 💖</title>
+  <title>For Ujika 💖</title>
+
   <style>
     body {
       height: 100vh;
@@ -11,21 +12,22 @@
       justify-content: center;
       align-items: center;
       background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-      font-family: 'Arial', sans-serif;
+      font-family: Arial, sans-serif;
+      overflow: hidden;
     }
 
     .card {
       background: white;
-      padding: 40px;
+      padding: 35px;
       border-radius: 20px;
       text-align: center;
       box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-      width: 300px;
+      width: 320px;
+      position: relative;
     }
 
     h1 {
       color: #ff4d6d;
-      margin-bottom: 30px;
     }
 
     button {
@@ -34,60 +36,99 @@
       border: none;
       border-radius: 30px;
       cursor: pointer;
-      transition: 0.3s;
+      margin: 10px;
     }
 
     #yes {
-      background-color: #ff4d6d;
+      background: #ff4d6d;
       color: white;
-      margin-right: 10px;
-    }
-
-    #yes:hover {
-      background-color: #ff1f4b;
     }
 
     #no {
-      background-color: #ccc;
+      background: #ccc;
       position: absolute;
     }
 
-    .success {
+    .hidden {
       display: none;
+    }
+
+    /* Confetti */
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      animation: fall linear infinite;
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(-100vh); }
+      100% { transform: translateY(100vh); }
+    }
+
+    img {
+      width: 100%;
+      border-radius: 15px;
+      margin-top: 15px;
     }
   </style>
 </head>
+
 <body>
 
-  <div class="card" id="questionCard">
-    <h1>Will you be my Valentine? 💘</h1>
-    <button id="yes">Yes 💖</button>
-    <button id="no">No 😢</button>
-  </div>
+<!-- MUSIC -->
+<audio id="music" src="dariya.mp3"></audio>
 
-  <div class="card success" id="successCard">
-    <h1>YAYYYYY 💕</h1>
-    <p>You just made me the happiest person 😭💖</p>
-  </div>
+<!-- QUESTION SCREEN -->
+<div class="card" id="question">
+  <h1>Ujika, will you be my Valentine? 💘</h1>
+  <button id="yes">Yes 💖</button>
+  <button id="no">No 😌</button>
+</div>
 
-  <script>
-    const noBtn = document.getElementById("no");
-    const yesBtn = document.getElementById("yes");
-    const questionCard = document.getElementById("questionCard");
-    const successCard = document.getElementById("successCard");
+<!-- YES SCREEN -->
+<div class="card hidden" id="love">
+  <h1>It’s Us 💕</h1>
+  <p>Saara jag chhad ke… I choose you.</p>
+  <img src="ujika.jpg" alt="Us">
+</div>
 
-    noBtn.addEventListener("mouseover", () => {
-      const x = Math.random() * (window.innerWidth - 100);
-      const y = Math.random() * (window.innerHeight - 50);
-      noBtn.style.left = x + "px";
-      noBtn.style.top = y + "px";
-    });
+<script>
+  const noBtn = document.getElementById("no");
+  const yesBtn = document.getElementById("yes");
+  const question = document.getElementById("question");
+  const love = document.getElementById("love");
+  const music = document.getElementById("music");
 
-    yesBtn.addEventListener("click", () => {
-      questionCard.style.display = "none";
-      successCard.style.display = "block";
-    });
-  </script>
+  // NO button moves faster
+  noBtn.addEventListener("mouseover", () => {
+    const x = Math.random() * (window.innerWidth - 120);
+    const y = Math.random() * (window.innerHeight - 120);
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+  });
+
+  // YES click
+  yesBtn.addEventListener("click", () => {
+    question.classList.add("hidden");
+    love.classList.remove("hidden");
+
+    // start Dariya from "saara jag chhad ke"
+    music.currentTime = 38;
+    music.play();
+
+    // confetti
+    for (let i = 0; i < 100; i++) {
+      const conf = document.createElement("div");
+      conf.className = "confetti";
+      conf.style.left = Math.random() * 100 + "vw";
+      conf.style.backgroundColor = `hsl(${Math.random()*360},100%,70%)`;
+      conf.style.animationDuration = (Math.random() * 2 + 2) + "s";
+      document.body.appendChild(conf);
+    }
+  });
+</script>
 
 </body>
 </html>
+
