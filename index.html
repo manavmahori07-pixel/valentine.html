@@ -1,151 +1,193 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Just Us ❤️</title>
+<meta charset="UTF-8">
+<title>Just Us ❤️</title>
 
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-      font-family: Arial, sans-serif;
-      overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
-    /* QUESTION SCREEN */
-    .question {
-      text-align: center;
-    }
+<style>
+body{
+  margin:0;
+  height:100vh;
+  background:linear-gradient(135deg,#ff9a9e,#fad0c4);
+  font-family:Arial,sans-serif;
+  overflow:hidden;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
 
-    h1 {
-      color: #ff4d6d;
-      font-size: 32px;
-      margin-bottom: 30px;
-    }
+.question{text-align:center;}
+h1{color:#ff4d6d;font-size:32px;}
 
-    button {
-      padding: 14px 30px;
-      font-size: 18px;
-      border: none;
-      border-radius: 30px;
-      cursor: pointer;
-      margin: 10px;
-    }
+button{
+  padding:14px 30px;
+  font-size:18px;
+  border:none;
+  border-radius:30px;
+  cursor:pointer;
+  margin:10px;
+}
 
-    #yes {
-      background: #ff4d6d;
-      color: white;
-    }
+#yes{background:#ff4d6d;color:white;transition:0.3s;}
+#no{background:#ccc;position:absolute;}
 
-    #no {
-      background: #ccc;
-      position: absolute;
-    }
+.final{
+  display:none;
+  background:white;
+  padding:25px;
+  border-radius:25px;
+  text-align:center;
+  box-shadow:0 20px 40px rgba(0,0,0,0.3);
+  max-width:340px;
+  position:relative;
+  z-index:2;
+}
 
-    /* FINAL CARD */
-    .final {
-      display: none;
-      background: white;
-      padding: 30px;
-      border-radius: 25px;
-      box-shadow: 0 15px 40px rgba(0,0,0,0.25);
-      text-align: center;
-      max-width: 340px;
-      position: relative;
-      z-index: 2;
-    }
+.final img{
+  width:100%;
+  border-radius:20px;
+  margin-top:15px;
+  animation:zoom 20s linear infinite;
+}
 
-    .final img {
-      width: 100%;
-      border-radius: 20px;
-      margin-top: 20px;
-    }
+@keyframes zoom{
+  0%{transform:scale(1);}
+  100%{transform:scale(1.1);}
+}
 
-    .main-text {
-      font-size: 34px;
-      font-weight: 900;
-      color: #ff4d6d;
-      margin-bottom: 10px;
-    }
+.main-text{
+  font-size:34px;
+  font-weight:900;
+  color:#ff4d6d;
+}
 
-    .love-text {
-      font-size: 24px;
-      font-weight: 800;
-      color: #ff1f4b;
-    }
+.love-text{
+  font-size:24px;
+  font-weight:800;
+  color:#ff1f4b;
+}
 
-    /* CONFETTI */
-    .confetti {
-      position: fixed;
-      width: 10px;
-      height: 10px;
-      animation: fall linear infinite;
-      z-index: 1;
-    }
+.timer{
+  margin-top:10px;
+  font-size:16px;
+  color:#444;
+}
 
-    @keyframes fall {
-      0% { transform: translateY(-100vh); }
-      100% { transform: translateY(100vh); }
-    }
-  </style>
+.save{
+  margin-top:15px;
+  background:#ff4d6d;
+  color:white;
+}
+
+.heart{
+  position:fixed;
+  font-size:20px;
+  animation:fall linear infinite;
+}
+
+@keyframes fall{
+  0%{transform:translateY(-10vh);}
+  100%{transform:translateY(110vh);}
+}
+</style>
 </head>
 
 <body>
 
 <audio id="music" src="dariya.mp3"></audio>
 
-<!-- QUESTION -->
 <div class="question" id="question">
   <h1>Ujika, will you be my Valentine? 💘</h1>
   <button id="yes">Yes ❤️</button>
   <button id="no">No 😌</button>
 </div>
 
-<!-- FINAL -->
 <div class="final" id="final">
-  <div class="main-text">In this world, IT’S JUST US</div>
-  <div class="love-text">I LOVE YOU BABY ❤️</div>
-  <img src="ujika.jpg" alt="Us">
+  <div class="main-text" id="line1"></div>
+  <div class="love-text" id="line2"></div>
+  <div class="timer" id="timer"></div>
+  <img src="ujika.jpg" id="photo">
+  <button class="save" onclick="saveMoment()">Save this moment 📸</button>
 </div>
 
 <script>
-  const noBtn = document.getElementById("no");
-  const yesBtn = document.getElementById("yes");
-  const question = document.getElementById("question");
-  const finalScreen = document.getElementById("final");
-  const music = document.getElementById("music");
+const yes=document.getElementById("yes");
+const no=document.getElementById("no");
+const q=document.getElementById("question");
+const f=document.getElementById("final");
+const music=document.getElementById("music");
 
-  // Faster NO button
-  noBtn.addEventListener("mouseover", () => {
-    const x = Math.random() * (window.innerWidth - 120);
-    const y = Math.random() * (window.innerHeight - 120);
-    noBtn.style.left = x + "px";
-    noBtn.style.top = y + "px";
+let yesSize=1;
+let noTexts=["Are you sure?","Think again 😏","Nice try","No isn’t allowed 😌"];
+let noIndex=0;
+
+no.addEventListener("mouseover",()=>{
+  no.textContent=noTexts[noIndex++%noTexts.length];
+  yesSize+=0.15;
+  yes.style.transform=`scale(${yesSize})`;
+  no.style.left=Math.random()*(window.innerWidth-120)+"px";
+  no.style.top=Math.random()*(window.innerHeight-120)+"px";
+});
+
+yes.addEventListener("click",()=>{
+  q.style.display="none";
+  f.style.display="block";
+  music.play();
+  typeText("In this world, IT’S JUST US","line1",80,()=>{
+    typeText("I LOVE YOU BABY ❤️","line2",100);
   });
+  hearts();
+  countdown();
+});
 
-  // YES click
-  yesBtn.addEventListener("click", () => {
-    question.style.display = "none";
-    finalScreen.style.display = "block";
+function typeText(text,id,speed,cb){
+  let i=0;
+  const el=document.getElementById(id);
+  el.textContent="";
+  const t=setInterval(()=>{
+    el.textContent+=text[i++];
+    if(i===text.length){clearInterval(t);if(cb)cb();}
+  },speed);
+}
 
-    music.play();
+function hearts(){
+  for(let i=0;i<60;i++){
+    const h=document.createElement("div");
+    h.className="heart";
+    h.textContent="❤️";
+    h.style.left=Math.random()*100+"vw";
+    h.style.animationDuration=(Math.random()*3+3)+"s";
+    document.body.appendChild(h);
+  }
+}
 
-    // Confetti
-    for (let i = 0; i < 120; i++) {
-      const conf = document.createElement("div");
-      conf.className = "confetti";
-      conf.style.left = Math.random() * 100 + "vw";
-      conf.style.backgroundColor = `hsl(${Math.random()*360},100%,70%)`;
-      conf.style.animationDuration = (Math.random() * 2 + 2) + "s";
-      document.body.appendChild(conf);
-    }
+function countdown(){
+  const target=new Date("Feb 14, 2026 00:00:00").getTime();
+  setInterval(()=>{
+    const now=new Date().getTime();
+    const d=target-now;
+    if(d<0)return;
+    const days=Math.floor(d/(1000*60*60*24));
+    document.getElementById("timer").textContent=
+      `Valentine’s Day in ${days} days ❤️`;
+  },1000);
+}
+
+document.getElementById("photo").onclick=()=>{
+  alert("You’re stuck with me now 😌❤️");
+};
+
+function saveMoment(){
+  html2canvas(document.body).then(canvas=>{
+    const a=document.createElement("a");
+    a.download="just-us.png";
+    a.href=canvas.toDataURL();
+    a.click();
   });
+}
 </script>
 
 </body>
 </html>
-
