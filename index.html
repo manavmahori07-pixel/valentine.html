@@ -18,20 +18,6 @@ body{
   align-items:center;
 }
 
-.tap{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.85);
-  color:white;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  text-align:center;
-  font-size:26px;
-  z-index:999;
-  cursor:pointer;
-}
-
 .question{text-align:center;}
 h1{color:#ff4d6d;font-size:32px;}
 
@@ -44,7 +30,7 @@ button{
   margin:10px;
 }
 
-#yes{background:#ff4d6d;color:white;}
+#yes{background:#ff4d6d;color:white;transition:0.3s;}
 #no{background:#ccc;position:absolute;}
 
 .final{
@@ -83,6 +69,12 @@ button{
   color:#ff1f4b;
 }
 
+.timer{
+  margin-top:10px;
+  font-size:16px;
+  color:#444;
+}
+
 .save{
   margin-top:15px;
   background:#ff4d6d;
@@ -104,11 +96,7 @@ button{
 
 <body>
 
-<div class="tap" id="tap">
-  Tap anywhere ❤️
-</div>
-
-<audio id="music" src="dariya.mp3" preload="auto"></audio>
+<audio id="music" src="dariya.mp3"></audio>
 
 <div class="question" id="question">
   <h1>Ujika, will you be my Valentine? 💘</h1>
@@ -119,26 +107,17 @@ button{
 <div class="final" id="final">
   <div class="main-text" id="line1"></div>
   <div class="love-text" id="line2"></div>
+  <div class="timer" id="timer"></div>
   <img src="ujika.jpg" id="photo">
   <button class="save" onclick="saveMoment()">Save this moment 📸</button>
 </div>
 
 <script>
-const tap=document.getElementById("tap");
-const music=document.getElementById("music");
-
-tap.onclick=()=>{
-  music.play().then(()=>{
-    music.pause();
-    music.currentTime=0;
-    tap.style.display="none";
-  });
-};
-
 const yes=document.getElementById("yes");
 const no=document.getElementById("no");
 const q=document.getElementById("question");
 const f=document.getElementById("final");
+const music=document.getElementById("music");
 
 let yesSize=1;
 let noTexts=["Are you sure?","Think again 😏","Nice try","No isn’t allowed 😌"];
@@ -160,6 +139,7 @@ yes.addEventListener("click",()=>{
     typeText("I LOVE YOU BABY ❤️","line2",100);
   });
   hearts();
+  countdown();
 });
 
 function typeText(text,id,speed,cb){
@@ -183,6 +163,22 @@ function hearts(){
   }
 }
 
+function countdown(){
+  const target=new Date("Feb 14, 2026 00:00:00").getTime();
+  setInterval(()=>{
+    const now=new Date().getTime();
+    const d=target-now;
+    if(d<0)return;
+    const days=Math.floor(d/(1000*60*60*24));
+    document.getElementById("timer").textContent=
+      `Valentine’s Day in ${days} days ❤️`;
+  },1000);
+}
+
+document.getElementById("photo").onclick=()=>{
+  alert("You’re stuck with me now 😌❤️");
+};
+
 function saveMoment(){
   html2canvas(document.body).then(canvas=>{
     const a=document.createElement("a");
@@ -192,6 +188,10 @@ function saveMoment(){
   });
 }
 </script>
+
+</body>
+</html>
+
 
 </body>
 </html>
