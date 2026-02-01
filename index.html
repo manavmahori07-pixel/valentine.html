@@ -2,37 +2,36 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>For Ujika 💖</title>
+  <title>Just Us ❤️</title>
 
   <style>
     body {
-      height: 100vh;
       margin: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      height: 100vh;
       background: linear-gradient(135deg, #ff9a9e, #fad0c4);
       font-family: Arial, sans-serif;
       overflow: hidden;
     }
 
-    .card {
-      background: white;
-      padding: 35px;
-      border-radius: 20px;
+    /* QUESTION SCREEN */
+    .question {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       text-align: center;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-      width: 320px;
-      position: relative;
     }
 
     h1 {
       color: #ff4d6d;
+      font-size: 32px;
+      margin-bottom: 30px;
     }
 
     button {
-      padding: 12px 25px;
-      font-size: 16px;
+      padding: 14px 30px;
+      font-size: 18px;
       border: none;
       border-radius: 30px;
       cursor: pointer;
@@ -49,58 +48,72 @@
       position: absolute;
     }
 
-    .hidden {
+    /* FINAL SCREEN */
+    .final {
       display: none;
+      position: fixed;
+      inset: 0;
+      background: black;
     }
 
-    /* Confetti */
+    .final img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .overlay-text {
+      position: absolute;
+      bottom: 8%;
+      width: 100%;
+      text-align: center;
+      color: white;
+      font-size: 34px;
+      font-weight: bold;
+      text-shadow: 0 4px 20px rgba(0,0,0,0.6);
+    }
+
+    /* CONFETTI */
     .confetti {
       position: fixed;
       width: 10px;
       height: 10px;
       animation: fall linear infinite;
+      z-index: 10;
     }
 
     @keyframes fall {
       0% { transform: translateY(-100vh); }
       100% { transform: translateY(100vh); }
     }
-
-    img {
-      width: 100%;
-      border-radius: 15px;
-      margin-top: 15px;
-    }
   </style>
 </head>
 
 <body>
 
-<!-- MUSIC -->
 <audio id="music" src="dariya.mp3"></audio>
 
-<!-- QUESTION SCREEN -->
-<div class="card" id="question">
+<!-- QUESTION -->
+<div class="question" id="question">
   <h1>Ujika, will you be my Valentine? 💘</h1>
-  <button id="yes">Yes 💖</button>
+  <button id="yes">Yes ❤️</button>
   <button id="no">No 😌</button>
 </div>
 
-<!-- YES SCREEN -->
-<div class="card hidden" id="love">
-  <h1>It’s Us 💕</h1>
-  <p>Saara jag chhad ke… I choose you.</p>
+<!-- FINAL -->
+<div class="final" id="final">
   <img src="ujika.jpg" alt="Us">
+  <div class="overlay-text">In this world, IT’S JUST US ❤️</div>
 </div>
 
 <script>
   const noBtn = document.getElementById("no");
   const yesBtn = document.getElementById("yes");
   const question = document.getElementById("question");
-  const love = document.getElementById("love");
+  const finalScreen = document.getElementById("final");
   const music = document.getElementById("music");
 
-  // NO button moves faster
+  // Faster NO button
   noBtn.addEventListener("mouseover", () => {
     const x = Math.random() * (window.innerWidth - 120);
     const y = Math.random() * (window.innerHeight - 120);
@@ -110,15 +123,14 @@
 
   // YES click
   yesBtn.addEventListener("click", () => {
-    question.classList.add("hidden");
-    love.classList.remove("hidden");
+    question.style.display = "none";
+    finalScreen.style.display = "block";
 
-    // start Dariya from "saara jag chhad ke"
-    music.currentTime = 38;
+    // Play music from beginning
     music.play();
 
-    // confetti
-    for (let i = 0; i < 100; i++) {
+    // Confetti
+    for (let i = 0; i < 120; i++) {
       const conf = document.createElement("div");
       conf.className = "confetti";
       conf.style.left = Math.random() * 100 + "vw";
@@ -131,4 +143,3 @@
 
 </body>
 </html>
-
